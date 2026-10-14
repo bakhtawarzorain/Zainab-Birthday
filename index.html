@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4a1023">
+  <title>A Little World Made for Zainab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --wine: #4a1023;
+      --rose: #f3c8d1;
+      --cream: #fff8f0;
+      --gold: #dfb86b;
+      --ink: #42212d;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+    button { font: inherit; cursor: pointer; }
+    .screen {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 28px 18px;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    #gate {
+      color: var(--cream);
+      background:
+        radial-gradient(ellipse at 15% 15%, #8b3652 0, transparent 38%),
+        radial-gradient(ellipse at 90% 85%, #71304a 0, transparent 35%),
+        var(--wine);
+    }
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      color: var(--gold);
+      opacity: .7;
+      animation: twinkle 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: .25; transform: scale(.8); }
+      to { opacity: .95; transform: scale(1.2); }
+    }
+    .gate-content { position: relative; z-index: 1; max-width: 580px; }
+    .eyebrow {
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .lock-icon {
+      width: 104px;
+      height: 104px;
+      margin: 30px auto;
+      display: grid;
+      place-items: center;
+      border: 1px solid #dfb86b88;
+      border-radius: 50%;
+      background: #ffffff0b;
+      font-size: 43px;
+      box-shadow: 0 0 55px #dfb86b1a;
+    }
+    h1, h2, h3 { font-family: "Playfair Display", serif; }
+    #gate h1 {
+      font-size: clamp(42px, 8vw, 76px);
+      line-height: 1.08;
+      font-weight: 500;
+      margin: 0 0 18px;
+    }
+    #gate h1 em { color: var(--rose); }
+    .subtitle {
+      max-width: 390px;
+      margin: 0 auto 30px;
+      line-height: 1.8;
+      color: #f6e5e8;
+      font-size: 14px;
+    }
+    .primary {
+      border: 0;
+      border-radius: 999px;
+      background: var(--rose);
+      color: var(--wine);
+      padding: 16px 25px;
+      font-weight: 700;
+      box-shadow: 0 8px 30px #0002;
+      transition: transform .2s, background .2s;
+    }
+    .primary:hover { transform: translateY(-3px); background: #ffe0e6; }
+    .small-note { margin-top: 22px; font-size: 11px; color: #f2d8de; }
+    #world { display: none; }
+    #world.show { display: block; }
+    .hero {
+      text-align: center;
+      padding: 100px 20px 85px;
+      background: linear-gradient(150deg, #fff8f0, #f8dfe4);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero h2 {
+      font-size: clamp(42px, 8vw, 76px);
+      line-height: 1.1;
+      font-weight: 500;
+      margin: 20px auto;
+      max-width: 760px;
+    }
+    .hero h2 em { color: #9b3857; }
+    .hero p { line-height: 1.8; max-width: 500px; margin: auto; }
+    .section { padding: 75px 20px; max-width: 1000px; margin: auto; }
+    .section-heading { text-align: center; margin-bottom: 36px; }
+    .section-heading h2 { font-size: clamp(32px, 5vw, 48px); margin: 10px 0; }
+    .section-heading p { color: #80616a; line-height: 1.7; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .photo {
+      min-height: 210px;
+      border-radius: 16px;
+      background: linear-gradient(140deg, #f2d4db, #f9eae4);
+      border: 1px solid #e8c9cf;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 12px;
+    }
+    .photo img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .photo .placeholder { position: relative; z-index: 1; color: #713449; }
+    .photo .placeholder span { display: block; font-size: 30px; margin-bottom: 8px; }
+    .photo .placeholder small { font-size: 12px; }
+    .memory-card {
+      background: white;
+      padding: 26px;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px #6020390c;
+      text-align: center;
+    }
+    .video-frame {
+      background: var(--wine);
+      border-radius: 14px;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      color: white;
+      padding: 20px;
+      overflow: hidden;
+    }
+    video { width: 100%; max-height: 480px; border-radius: 12px; }
+    .letter {
+      max-width: 680px;
+      margin: auto;
+      padding: clamp(25px, 6vw, 55px);
+      background: #fffdf8;
+      border: 1px solid #ead8c4;
+      border-radius: 5px;
+      box-shadow: 0 15px 45px #54223610;
+      line-height: 2;
+      position: relative;
+    }
+    .letter h2 { text-align: center; font-size: 38px; color: var(--wine); }
+    .letter p { font-size: 15px; }
+    .signature { color: #9b3857; font-family: "Playfair Display", serif; font-style: italic; font-size: 24px; }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .note {
+      border: 1px solid #efd3d8;
+      background: #fff;
+      color: var(--wine);
+      border-radius: 12px;
+      min-height: 68px;
+      padding: 12px 5px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform .2s, background .2s;
+    }
+    .note:hover { transform: translateY(-3px); background: #fce8ec; }
+    .note-message {
+      text-align: center;
+      padding: 20px;
+      color: #8c3651;
+      min-height: 60px;
+      line-height: 1.7;
+    }
+    .final {
+      text-align: center;
+      padding: 85px 20px;
+      background: var(--wine);
+      color: var(--cream);
+    }
+    .final h2 { font-size: clamp(35px, 6vw, 55px); }
+    .final p { line-height: 1.9; max-width: 480px; margin: auto; }
+    footer { padding: 25px; text-align: center; font-size: 12px; color: #906b76; }
+    .reveal { animation: rise .8s ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .hidden-surprise { display: none; margin-top: 24px; color: var(--rose); line-height: 1.9; }
+    .hidden-surprise.open { display: block; animation: rise .6s ease both; }
+    @media (max-width: 560px) {
+      .gallery { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .photo { min-height: 155px; }
+      .notes-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+      .note { font-size: 12px; min-height: 60px; }
+      .section { padding: 55px 15px; }
+      .hero { padding: 75px 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <section id="gate" class="screen">
+    <div class="stars" id="stars"></div>
+    <div class="gate-content reveal">
+      <div class="eyebrow">A little surprise, made with love</div>
+      <div class="lock-icon">♡</div>
+      <h1>A little world<br>made for <em>Zainab.</em></h1>
+      <p class="subtitle">Some people make difficult days softer just by being there. This little corner of the internet is just for you.</p>
+      <button class="primary" id="unlock">Unlock your surprise ✦</button>
+      <div class="small-note">MADE ESPECIALLY FOR YOU · WITH LOVE</div>
+    </div>
+  </section>
+
+  <main id="world">
+    <section class="hero">
+      <div class="eyebrow">Today is all about you</div>
+      <h2>Happy Birthday,<br><em>beautiful soul.</em></h2>
+      <p>A tiny digital scrapbook for a person who has made a real difference in my life.</p>
+      <div style="margin-top:28px;color:#9b3857;font-size:24px">✧ ♡ ✧</div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div class="eyebrow">Little moments, big feelings</div>
+        <h2>Our little memories</h2>
+        <p>Every picture holds a moment worth keeping.</p>
+      </div>
+      <div class="gallery">
+        <div class="photo"><div class="placeholder"><span>♡</span><small>Our photo goes here</small></div></div>
+        <div class="photo"><div class="placeholder"><span>✧</span><small>A favourite memory</small></div></div>
+        <div class="photo"><div class="placeholder"><span>୨୧</span><small>A moment to remember</small></div></div>
+        <div class="photo"><div class="placeholder"><span>☾</span><small>One more little memory</small></div></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:10px">
+      <div class="section-heading">
+        <div class="eyebrow">Press play, keep the memory</div>
+        <h2>A little movie of us</h2>
+        <p>Some memories deserve to be watched again.</p>
+      </div>
+      <div class="memory-card">
+        <div class="video-frame" id="videoPlaceholder">
+          Your video will live here ♡<br><small style="margin-top:10px">We'll add your video in the next step.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="letter">
+        <div class="eyebrow" style="text-align:center">A letter from my heart</div>
+        <h2>Dear Zainab,</h2>
+        <p>Happy birthday to someone who has been beside me through some of my hardest moments.</p>
+        <p>Thank you for staying, for listening, and for making difficult days feel a little less difficult. You may not always realise how much your presence means to me, but I hope you know that I truly appreciate you.</p>
+        <p>On your birthday, I wish you the kind of happiness that stays, the kind of peace that makes your heart feel at home, and people who give you the same kindness you give to others.</p>
+        <p>May this new chapter bring you beautiful surprises, countless reasons to smile, and dreams that slowly become real. You deserve so many good things, today and always.</p>
+        <p>Thank you for being a part of my story. I'm genuinely grateful that our paths crossed.</p>
+        <p class="signature">With lots of love, ♡<br>Your friend</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div class="eyebrow">Pick a little reminder</div>
+        <h2>Little notes for you</h2>
+        <p>Tap a number whenever you need a tiny bit of happiness.</p>
+      </div>
+      <div class="notes-grid" id="notes"></div>
+      <div class="note-message" id="noteMessage" aria-live="polite">Choose any little note above ♡</div>
+    </section>
+
+    <section class="final">
+      <div class="eyebrow">One last little thing</div>
+      <h2>There's more, just for you.</h2>
+      <p>Before you go, there's one last message waiting for you.</p>
+      <button class="primary" id="finalButton" style="margin-top:26px">Open your final surprise ♡</button>
+      <div class="hidden-surprise" id="finalMessage">
+        <h2 style="color:#f3c8d1">You are appreciated.</h2>
+        Thank you for being there when life wasn't easy.<br>
+        I hope this year is gentle with you, Zainab.<br>
+        Keep shining in your own beautiful way. ✧
+      </div>
+    </section>
+    <footer>Made with care, for Zainab · A little world of our own ♡</footer>
+  </main>
+
+  <script>
+    const stars = document.getElementById("stars");
+    for (let i = 0; i < 45; i++) {
+      const star = document.createElement("span");
+      star.className = "star";
+      star.textContent = Math.random() > .5 ? "✦" : "·";
+      star.style.left = Math.random() * 100 + "%";
+      star.style.top = Math.random() * 100 + "%";
+      star.style.fontSize = (8 + Math.random() * 15) + "px";
+      star.style.animationDelay = Math.random() * 3 + "s";
+      stars.appendChild(star);
+    }
+
+    document.getElementById("unlock").addEventListener("click", () => {
+      document.getElementById("gate").style.display = "none";
+      const world = document.getElementById("world");
+      world.classList.add("show");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const messages = [
+      "You matter more than you know. ♡",
+      "You deserve a day full of little joys.",
+      "Thank you for being there for me.",
+      "Your kindness makes a difference.",
+      "May your favourite dreams find you.",
+      "You don't have to be perfect to be amazing.",
+      "I hope today makes you smile.",
+      "You deserve the same care you give others.",
+      "Your presence is a gift.",
+      "Keep being wonderfully you.",
+      "Hard days never tell your whole story.",
+      "May this year bring you peace.",
+      "You are appreciated, always.",
+      "There is so much ahead to look forward to.",
+      "I am glad our paths crossed.",
+      "You can always celebrate your little wins.",
+      "May laughter find you often.",
+      "Your dreams deserve a chance.",
+      "You make memories worth keeping.",
+      "Wishing you a softer, brighter year.",
+      "You deserve honest and kind friendships.",
+      "Never forget the good you bring.",
+      "I hope life surprises you beautifully.",
+      "You are allowed to take things slowly.",
+      "May your heart feel light today.",
+      "Thank you for the memories we share.",
+      "You have so many chapters left to write.",
+      "I hope you feel loved today.",
+      "Small steps count, too.",
+      "May you find joy in ordinary days.",
+      "You are worth showing up for.",
+      "May your wishes grow into plans.",
+      "You deserve reasons to be proud.",
+      "I hope this birthday feels special.",
+      "May good things meet you halfway.",
+      "You bring your own kind of magic.",
+      "Keep a little room for wonder.",
+      "Today, celebrate how far you've come.",
+      "I wish you happiness that lasts.",
+      "One more year of possibilities. Happy birthday!"
+    ];
+
+    const notes = document.getElementById("notes");
+    messages.forEach((message, index) => {
+      const button = document.createElement("button");
+      button.className = "note";
+      button.textContent = "Note " + String(index + 1).padStart(2, "0") + " ♡";
+      button.addEventListener("click", () => {
+        document.getElementById("noteMessage").textContent = message;
+      });
+      notes.appendChild(button);
+    });
+
+    document.getElementById("finalButton").addEventListener("click", () => {
+      const message = document.getElementById("finalMessage");
+      message.classList.toggle("open");
+      document.getElementById("finalButton").textContent =
+        message.classList.contains("open") ? "Keep this little wish ♡" : "Open your final surprise ♡";
+    });
+  </script>
+</body>
+</html>
